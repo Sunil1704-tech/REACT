@@ -1,0 +1,148 @@
+import React, { useState } from "react";
+
+const App = () => {
+  // Initial list of books
+  const [books, setBooks] = useState([
+    { title: "1984", author: "George Orwell" },
+    { title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+    { title: "To Kill a Mockingbird", author: "Harper Lee" },
+  ]);
+
+  // State for search and form inputs
+  const [searchTerm, setSearchTerm] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+
+  // Handle adding a new book
+  const handleAddBook = () => {
+    if (newTitle.trim() === "" || newAuthor.trim() === "") return;
+    const newBook = { title: newTitle, author: newAuthor };
+    setBooks([...books, newBook]);
+    setNewTitle("");
+    setNewAuthor("");
+  };
+
+  // Handle removing a book
+  const handleRemoveBook = (index) => {
+    const updatedBooks = books.filter((_, i) => i !== index);
+    setBooks(updatedBooks);
+  };
+
+  // Filter books based on search
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.title}>Library Management</h2>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by title or author"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={styles.searchInput}
+      />
+
+      {/* Add Book Form */}
+      <div style={styles.addForm}>
+        <input
+          type="text"
+          placeholder="New book title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          style={styles.input}
+        />
+        <input
+          type="text"
+          placeholder="New book author"
+          value={newAuthor}
+          onChange={(e) => setNewAuthor(e.target.value)}
+          style={styles.input}
+        />
+        <button onClick={handleAddBook} style={styles.addButton}>
+          Add Book
+        </button>
+      </div>
+
+      {/* Book List */}
+      <div>
+        {filteredBooks.map((book, index) => (
+          <div key={index} style={styles.bookItem}>
+            <span>
+              <strong>{book.title}</strong> by {book.author}
+            </span>
+            <button
+              onClick={() => handleRemoveBook(index)}
+              style={styles.removeButton}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Inline styles
+const styles = {
+  container: {
+    border: "2px solid #333",
+    padding: "20px",
+    margin: "20px",
+    maxWidth: "600px",
+  },
+  title: {
+    fontWeight: "bold",
+    marginBottom: "15px",
+  },
+  searchInput: {
+    width: "100%",
+    padding: "8px",
+    marginBottom: "12px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  addForm: {
+    display: "flex",
+    gap: "8px",
+    marginBottom: "15px",
+  },
+  input: {
+    flex: 1,
+    padding: "8px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  addButton: {
+    padding: "8px 12px",
+    border: "1px solid #999",
+    background: "#f5f5f5",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  bookItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    border: "1px solid #ddd",
+    padding: "10px",
+    marginBottom: "8px",
+    borderRadius: "4px",
+    background: "#fafafa",
+  },
+  removeButton: {
+    padding: "6px 10px",
+    border: "1px solid #999",
+    background: "#eee",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+};
+
+export default App;
